@@ -9,10 +9,10 @@ export default function DataTable() {
   const [suggestions, setSuggestions] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
-    setLoading(true); // Set loading to true when fetching data
+    setLoading(true);
     try {
       const response = await axios.get("/api/alumni/info");
       setRow(response.data.data);
@@ -20,7 +20,7 @@ export default function DataTable() {
     } catch (error) {
       console.error("Failed to fetch data", error);
     } finally {
-      setLoading(false); // Set loading to false after data is fetched or on error
+      setLoading(false);
     }
   };
 
@@ -94,7 +94,9 @@ export default function DataTable() {
             />
             <button
               onClick={exportToCSV}
-              className="px-3 py-2 mb-4 text-white bg-gray-600 transition-all duration-500 text-xs rounded-md hover:bg-blue-600"
+              className="lg:px-3  px-2 lg:py-2 py-1 mb-4
+               text-white bg-gray-600 transition-all 
+               duration-500 text-xs rounded-md hover:bg-blue-600"
             >
               Export to CSV
             </button>
@@ -118,13 +120,12 @@ export default function DataTable() {
             </ul>
           )}
 
-          {/* Show loading indicator if loading is true */}
           {loading ? (
             <div className="flex justify-center items-center">
               <p>Loading...</p>
             </div>
           ) : (
-              <div className="overflow-x-auto text-xs lg:text-sm rounded-lg shadow-md">
+            <div className="overflow-x-auto text-xs lg:text-sm rounded-lg shadow-md">
               <table className="min-w-full text-[13px] lg:text-sm divide-y  divide-gray-200">
                 <thead className="bg-gray-50  whitespace-nowrap">
                   <tr>

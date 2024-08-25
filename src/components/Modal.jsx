@@ -12,7 +12,7 @@ export default function ResponseModal({ closeModal, selectedRow }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed  inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl mx-4 sm:mx-6 lg:mx-8 transform transition-all duration-300 ease-in-out">
         
         <div className="flex items-center mb-6">
@@ -27,7 +27,7 @@ export default function ResponseModal({ closeModal, selectedRow }) {
           </div>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-6 text-sm">
           <h3 className="text-lg font-semibold text-blue-700 mb-2">Contact Information</h3>
           <div className="flex flex-col space-y-3">
             <div className="flex items-center text-gray-700">
@@ -45,18 +45,18 @@ export default function ResponseModal({ closeModal, selectedRow }) {
           </div>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-6 text-sm">
           <h3 className="text-lg font-semibold text-blue-700 mb-2">Additional Details</h3>
           <div className="space-y-2">
             <p><strong>Middle Name:</strong> {selectedRow.middleName || 'N/A'}</p>
             <p><strong>Supervisor:</strong> {selectedRow.supervisor || 'N/A'}</p>
-            <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-600">
+            <blockquote className="border-l-4  border-blue-500 pl-4 text-gray-600">
               <p><strong>Advice:</strong> {selectedRow.advice || 'No advice provided.'}</p>
             </blockquote>
           </div>
         </div>
 
-        {/* Admin Actions */}
+
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-blue-700 mb-2">Admin Actions</h3>
           <div className="flex flex-col space-y-3">

@@ -7,8 +7,8 @@ import { MdDashboard, MdSettings } from "react-icons/md";
 import AdminsPage from "./Admin";
 import { useApiContext } from "@/context-provider/ApiProvider";
 
-// const developmentUrl = "http://localhost:3000";
-const developmentUrl = 'https://animal-breeding-and-genetics-rbbu.vercel.app'
+const developmentUrl = "http://localhost:3000";
+// const developmentUrl = 'https://animal-breeding-and-genetics-rbbu.vercel.app'
 export async function getServerSideProps(context) {
   const { req } = context;
   const token = req.cookies.token;
@@ -99,13 +99,11 @@ export default function Admin({ user }) {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
       <aside
         className={`fixed inset-0 top-0 left-0 lg:relative lg:w-64 w-64 bg-gray-800 text-white flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* Mobile Sidebar Toggle Button */}
         <div className="py-6 px-4 flex justify-between items-center lg:hidden">
           <h1 className="text-xl font-bold">Admin Dashboard</h1>
         </div>
@@ -128,7 +126,7 @@ export default function Admin({ user }) {
       <main className="flex-1 p-6 bg-gray-100 overflow-auto">
         <header className="bg-white p-4 rounded-lg shadow-md mb-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-gray-900">
               Welcome, {user.name}!
   
             </h2>
@@ -139,9 +137,9 @@ export default function Admin({ user }) {
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               >
                 {isSidebarOpen ? (
-                  <FaTimes className="w-6 h-6" />
+                  <FaTimes className="w-3 h-3" />
                 ) : (
-                  <FaBars className="w-6 h-6" />
+                  <FaBars className="w-3 h-3" />
                 )}
               </button>
 
