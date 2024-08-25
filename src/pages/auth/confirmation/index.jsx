@@ -10,7 +10,7 @@ export default function Confirmation() {
                 <div>
                     <div >
                         <div>
-                            <img src={image} alt="" />
+             
                         </div>
                         <div >
                            <h1>Account Verified Successfully!</h1>
