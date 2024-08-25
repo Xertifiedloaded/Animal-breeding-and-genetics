@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+*,*::before,*::after{
+  padding: 0;
+  margin: 0;
+}
+body {
+  /* background: #F7F3F5; */
+  color: black;
+  /* font-family: "Poppins", sans-serif; */
+}
+.wrapper{
+  @apply w-[85%] mx-auto
+}
+.nav-wrapper{
+  @apply px-4 md:px-24  lg:px-28
+}
+.hero {
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: top;
+}
+input,textarea{
+  outline: none;
+}
+.form-control{
+ 
+  height: 100%!important;
+  width: 100%!important;
+  font-size: 16px !important;
+  border-radius: 5px !important;
+  outline: none !important;
+  border: none !important;
+}
+textarea{
+  resize: none;
+}
+.country-select {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.phone-input {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.bg,
+.bgImage {
+  background-image: url('../assets/image.jpeg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+::-webkit-scrollbar{
+  display: none;
+}
+
+@media screen and (min-width:200px) {
+  .bgImage {
+    background-image: url('../assets/image.jpeg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+  }
+}
+
+@media screen and (min-width:768px) {
+  .bgImage {
+    background-image: none;
+  }
+}
