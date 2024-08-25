@@ -81,18 +81,18 @@ export default function DataTable() {
   return (
     <>
       <div className="min-h-screen">
-        <div className="p-4  rounded-lg ">
+        <div className=" mt-4  rounded-lg ">
           <div className="flex justify-between">
             <input
               type="text"
               value={searchTerm}
               onChange={handleSearchChange}
               placeholder="Search by First or Last Name..."
-              className="px-4 lg:w-[50%] py-2 mb-4 border rounded-md"
+              className="px-4 lg:w-[50%] w-[70%] py-2 placeholder:text-xs mb-4 border rounded-md"
             />
             <button
               onClick={exportToCSV}
-              className="px-4 py-2 mb-4 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+              className="px-3 py-2 mb-4 text-white  bg-gray-600 transition-all duration-500  text-xs rounded-md hover:bg-blue-600"
             >
               Export to CSV
             </button>

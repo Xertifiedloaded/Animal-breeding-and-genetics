@@ -9,7 +9,8 @@ export const ApiProvider = ({ children }) => {
   const [orders, setOrders] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContentType, setModalContentType] = useState(null);
-
+  const [emailAddresses, setEmailAddresses] = useState('');
+  const [loading, setLoading] = useState(true);
   const openModal = (type) => {
     setModalContentType(type);
     setIsModalOpen(true);
@@ -23,16 +24,31 @@ export const ApiProvider = ({ children }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get("/api/alumni/info");
-      setRow(response.data.data); 
+      const fetchedData = response.data.data;
+      setRow(fetchedData);
+      const emailAddresses = fetchedData.map(user => user.emailAddress).join(',');
+      setEmailAddresses(emailAddresses);
+      setLoading(false);
     } catch (error) {
       console.error("Failed to fetch data", error);
+      setLoading(false);
     }
   };
-
 
   useEffect(() => {
     fetchData();
   }, []);
+
+
+
+  const sendEmailToAllUsers = () => {
+    if (emailAddresses) {
+      console.log('Sending email to:', emailAddresses);
+      window.location.href = `mailto:${emailAddresses}`;
+    } else {
+      console.log('No email addresses to send.');
+    }
+  };
 
   const handleSubmitForm = async (
     errors,
@@ -93,6 +109,9 @@ export const ApiProvider = ({ children }) => {
         openModal,
         closeModal,
         handleSubmitForm,
+        emailAddresses,
+        loading,
+        sendEmailToAllUsers
       }}
     >
       {children}

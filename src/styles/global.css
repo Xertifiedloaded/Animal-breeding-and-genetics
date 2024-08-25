@@ -14,7 +14,7 @@ body {
   /* font-family: "Poppins", sans-serif; */
 }
 .wrapper{
-  @apply w-[85%] mx-auto
+  @apply w-[95%] mx-auto
 }
 .nav-wrapper{
   @apply px-4 md:px-24  lg:px-28
