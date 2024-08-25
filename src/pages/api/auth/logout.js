@@ -3,12 +3,12 @@ import { serialize } from "cookie";
 export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
-      // Clear the JWT token from cookies
+      
       const cookie = serialize("token", "", {
         httpOnly: true,
         secure: true,
         sameSite: "strict",
-        expires: new Date(0), // Expire immediately
+        expires: new Date(0), 
         path: "/",
       });
 

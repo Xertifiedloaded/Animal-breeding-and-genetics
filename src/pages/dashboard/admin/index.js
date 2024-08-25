@@ -5,8 +5,8 @@ import { FaPlus, FaUser } from "react-icons/fa";
 import { useApiContext } from "@/context-provider/ApiProvider";
 import { MdDashboard, MdEmail, MdSettings } from "react-icons/md";
 import AdminsPage from "./Admin";
-// const developmentUrl = 'https://animal-breeding-and-genetics-rbbu.vercel.app'
-const developmentUrl = "http://localhost:3000";
+const developmentUrl = 'https://animal-breeding-and-genetics-rbbu.vercel.app'
+// const developmentUrl = "http://localhost:3000";
 export async function getServerSideProps(context) {
   const { req } = context;
   const token = req.cookies.token;
@@ -92,7 +92,7 @@ export default function Admin({ user }) {
       case 0:
         return <DataTable user={user} />;
       case 1:
-        return <AdminsPage/>
+        return <AdminsPage />;
       case 2:
         return "Settings Component";
       default:
@@ -108,10 +108,10 @@ export default function Admin({ user }) {
     <>
       <section className="wrapper">
         <div className="flex w-full py-2 justify-between items-center">
-          <h1 className="lg:text-5xl xs:text-2xl capitalize">
+          <h1 className="lg:text-5xl text-2xl capitalize">
             Welcome {user.name}!
           </h1>
-          <div className="border border-black w-[40px] lg:h-[50px] lg:w-[50px] h-[40px] rounded-full"></div>
+          <button className="bg-gray-600 rounded-xl hover:bg-gray-950 transition-all duration-300 ease-out text-xs h-[30px] text-white w-[70px] lg:w-[80px]">Log Out</button>
         </div>
         <h4 className="my-4 lg:text-sm xs:text-sm font-600">{`Dashboard > ${currentTabName}`}</h4>
         <div className="grid grid-cols-2 mt-4 lg:grid-cols-4 gap-3">
