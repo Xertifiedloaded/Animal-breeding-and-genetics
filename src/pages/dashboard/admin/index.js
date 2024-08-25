@@ -1,7 +1,7 @@
 import React from "react";
 import DataTable from "./DashboardComponent";
-// const developmentUrl = 'https://buy-stuff-six.vercel.app'
-const developmentUrl = "http://localhost:3000";
+const developmentUrl = 'https://animal-breeding-and-genetics-rbbu.vercel.app'
+// const developmentUrl = "http://localhost:3000";
 export async function getServerSideProps(context) {
   const { req } = context;
   const token = req.cookies.token;
