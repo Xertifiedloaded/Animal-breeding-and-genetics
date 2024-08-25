@@ -131,5 +131,5 @@ export default function Admin({ user }) {
         {renderComponent()}
       </section>
     </>
-  );
+  )
 }
