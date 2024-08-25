@@ -43,9 +43,9 @@ const CreateUser = () => {
 
     return (
         <>
-            <section className="lg:grid   xs:block  h-screen lg:grid-cols-2  ">
-                <div className="bg xs:hidden lg:block"  />
-                <div className="bgImage lg:p-10 xs:p-4 xs:grid xs:items-center lg:block   xs:h-screen lg:h-full">
+            <section className="lg:grid   block  h-screen lg:grid-cols-2  ">
+                <div className="bg hidden lg:block"  />
+                <div className="bgImage lg:p-10 p-4 grid items-center lg:block   h-screen lg:h-full">
                     <FormComponent text='Signup' loading={loading} handleSubmit={handleSubmit} error={error} payload={payload} styleName={styleName} title='SignUp' handleChange={handleChange} />
                 </div>
 

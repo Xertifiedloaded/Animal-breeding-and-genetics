@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
-import DataTable from "./DashboardComponent";
 
-import { FaPlus, FaUser } from "react-icons/fa";
-import { useApiContext } from "@/context-provider/ApiProvider";
-import { MdDashboard, MdEmail, MdSettings } from "react-icons/md";
+
+import React, { useState } from "react";
+import DataTable from "./DashboardComponent";
+import { FaEnvelope, FaUser, FaBars, FaTimes } from "react-icons/fa";
+import { MdDashboard, MdSettings } from "react-icons/md";
 import AdminsPage from "./Admin";
-const developmentUrl = 'https://animal-breeding-and-genetics-rbbu.vercel.app'
+import { useApiContext } from "@/context-provider/ApiProvider";
+
 // const developmentUrl = "http://localhost:3000";
+const developmentUrl = 'https://animal-breeding-and-genetics-rbbu.vercel.app'
 export async function getServerSideProps(context) {
   const { req } = context;
   const token = req.cookies.token;
@@ -30,7 +32,6 @@ export async function getServerSideProps(context) {
       throw new Error("Failed to fetch user");
     }
     const { user } = await response.json();
-    console.log(user);
     return {
       props: { user },
     };
@@ -47,41 +48,35 @@ export async function getServerSideProps(context) {
 
 export default function Admin({ user }) {
   const [currentAction, setCurrentAction] = useState(0);
-  const { loading, sendEmailToAllUsers } = useApiContext();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { sendEmailToAllUsers } = useApiContext();
 
   const collections = [
     {
       name: "Dashboard",
-      icon: (
-        <MdDashboard
-          color="white"
-          className="font-400 text-[10px] md:text-sm"
-        />
-      ),
+      icon: <MdDashboard className="text-2xl" />,
       onClick: () => handleActionClick(0),
     },
     {
       name: "Admin",
-      icon: (
-        <FaUser color="white" className="font-400 text-[10px] md:text-sm" />
-      ),
+      icon: <FaUser className="text-2xl" />,
       onClick: () => handleActionClick(1),
     },
     {
       name: "Settings",
-      icon: (
-        <MdSettings color="white" className="font-400 text-[10px] md:text-sm" />
-      ),
+      icon: <MdSettings className="text-2xl" />,
       onClick: () => handleActionClick(2),
     },
     {
       name: "Email",
-      icon: (
-        <MdEmail color="white" className="font-400 text-[10px] md:text-sm" />
-      ),
+      icon: <FaEnvelope className="text-2xl" />,
       onClick: () => sendEmailToAllUsers(),
     },
   ];
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((isSidebarOpen) => !isSidebarOpen);
+  };
 
   const handleActionClick = (action) => {
     setCurrentAction(action);
@@ -100,36 +95,61 @@ export default function Admin({ user }) {
     }
   };
 
-  useEffect(() => {}, []);
-
   const currentTabName = collections[currentAction].name;
 
   return (
-    <>
-      <section className="wrapper">
-        <div className="flex w-full py-2 justify-between items-center">
-          <h1 className="lg:text-5xl text-2xl capitalize">
-            Welcome {user.name}!
-          </h1>
-          <button className="bg-gray-600 rounded-xl hover:bg-gray-950 transition-all duration-300 ease-out text-xs h-[30px] text-white w-[70px] lg:w-[80px]">Log Out</button>
+    <div className="flex h-screen overflow-hidden">
+      {/* Sidebar */}
+      <aside
+        className={`fixed inset-0 top-0 left-0 lg:relative lg:w-64 w-64 bg-gray-800 text-white flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Mobile Sidebar Toggle Button */}
+        <div className="py-6 px-4 flex justify-between items-center lg:hidden">
+          <h1 className="text-xl font-bold">Admin Dashboard</h1>
         </div>
-        <h4 className="my-4 lg:text-sm xs:text-sm font-600">{`Dashboard > ${currentTabName}`}</h4>
-        <div className="grid grid-cols-2 mt-4 lg:grid-cols-4 gap-3">
-          {collections.map((collection, idx) => (
-            <div
-              key={idx}
-              onClick={collection.onClick}
-              className="border rounded-lg bg-gray-600 text-white px-3 py-1 md:p-4 border-black"
-            >
-              <h2 className="text-sm md:text-md">{collection.name}</h2>
-              <div className="border my-4 md:my-3 md:w-6 md:h-6 w-5 h-5 grid items-center rounded-full justify-center border-white">
+        <nav className="flex-1 overflow-y-auto">
+          <div className="py-6 px-4 space-y-4">
+            {collections.map((collection, idx) => (
+              <div
+                key={idx}
+                onClick={collection.onClick}
+                className="flex items-center space-x-3 mb-4  p-2 cursor-pointer hover:bg-gray-700 rounded-lg transition"
+              >
                 {collection.icon}
+                <span className=" text-sm ">{collection.name}</span>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </nav>
+      </aside>
+
+      <main className="flex-1 p-6 bg-gray-100 overflow-auto">
+        <header className="bg-white p-4 rounded-lg shadow-md mb-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-semibold text-gray-900">
+              Welcome, {user.name}!
+  
+            </h2>
+
+            <button
+                className="text-black block lg:hidden  focus:outline-none"
+                aria-label={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              >
+                {isSidebarOpen ? (
+                  <FaTimes className="w-6 h-6" />
+                ) : (
+                  <FaBars className="w-6 h-6" />
+                )}
+              </button>
+
+          </div>
+        </header>
+        <h4 className="text-sm text-gray-700 mb-4">{`Dashboard > ${currentTabName}`}</h4>
         {renderComponent()}
-      </section>
-    </>
-  )
+      </main>
+    </div>
+  );
 }

@@ -11,7 +11,7 @@ export function Input({ payload, handleChange }) {
                         type={field.includes('password') ? 'password' : 'text'}
                         id={field}
                         name={field}
-                        className="p-3 h-[45px] xs:placeholder:text-xs xs:placeholder:text-black lg:placeholder:text-gray lg:placeholder:text-xs bg-transparent placeholder:text-sm text-[16px] rounded-md border lg:border-gray xs:border-gray-dark w-full outline-none"
+                        className="p-3 h-[45px]  placeholder:text-black lg:placeholder:text-gray lg:placeholder:text-xs bg-transparent placeholder:text-sm border-gray-600 text-[16px] rounded-md border lg:border-gray border-gray-dark w-full outline-none"
                         value={payload[field]}
                         onChange={handleChange}
                         placeholder={`Enter your ${field}`}
@@ -34,7 +34,7 @@ export function LoginInput({ payload, handleChange }) {
                         type={field.includes('password') ? 'password' : 'text'}
                         id={field}
                         name={field}
-                        className="p-3 h-[45px] xs:placeholder:text-xs xs:placeholder:text-black lg:placeholder:text-gray lg:placeholder:text-xs bg-transparent placeholder:text-sm text-[16px] rounded-md border lg:border-gray xs:border-gray-dark w-full outline-none"
+                        className="p-3 h-[45px] placeholder:text-xs placeholder:text-black lg:placeholder:text-gray border-gray-600  bg-transparent lg:placeholder:text-sm text-[16px] rounded-md border lg:border-gray border-gray-dark w-full outline-none"
                         value={payload[field]}
                         onChange={handleChange}
                         placeholder={`Enter your ${field}`}

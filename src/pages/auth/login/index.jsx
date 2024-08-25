@@ -11,7 +11,7 @@ const Login = () => {
     const router = useRouter()
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const styleName = 'w-full bg-blue-500 outline-none  bg-black text-white  border border-black py-3 mt-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300'
+    const styleName = 'w-full bg-blue-500 border-0 outline-none  bg-black text-white  border border-black py-3 mt-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300'
     const { login, } = useAuth()
     const [payload, setPayload] = useState({
         email: "",
@@ -41,9 +41,9 @@ const Login = () => {
     return (
         <>
 
-            <section className="lg:grid   xs:block  h-screen lg:grid-cols-2  ">
-                <div className="bg xs:hidden lg:block" />
-                <div className="bgImage lg:p-10 xs:p-4 xs:grid xs:items-center lg:block   xs:h-screen lg:h-full">
+            <section className="lg:grid   block  h-screen lg:grid-cols-2  ">
+                <div className="bg hidden lg:block" />
+                <div className="bgImage lg:p-10 p-4 grid items-center lg:block   h-screen lg:h-full">
                     <form onSubmit={handleSubmit} className="">
                         <h2 className="text-4xl font-semibold mb-4">Login</h2>
                         {/* {error && <p className="text-red-500 mb-4">{error}</p>} */}

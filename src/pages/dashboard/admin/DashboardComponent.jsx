@@ -124,9 +124,9 @@ export default function DataTable() {
               <p>Loading...</p>
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-lg shadow-md">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50 whitespace-nowrap">
+              <div className="overflow-x-auto text-xs lg:text-sm rounded-lg shadow-md">
+              <table className="min-w-full text-[13px] lg:text-sm divide-y  divide-gray-200">
+                <thead className="bg-gray-50  whitespace-nowrap">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">First Name</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Name</th>
