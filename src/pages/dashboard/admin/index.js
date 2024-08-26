@@ -1,14 +1,13 @@
-
-
 import React, { useState } from "react";
 import DataTable from "./DashboardComponent";
 import { FaEnvelope, FaUser, FaBars, FaTimes } from "react-icons/fa";
 import { MdDashboard, MdSettings } from "react-icons/md";
 import AdminsPage from "./Admin";
 import { useApiContext } from "@/context-provider/ApiProvider";
+import { useAuth } from "@/context-provider/AuthProvider";
 
 // const developmentUrl = "http://localhost:3000";
-const developmentUrl = 'https://animal-breeding-and-genetics-rbbu.vercel.app'
+const developmentUrl = "https://animal-breeding-and-genetics-rbbu.vercel.app";
 export async function getServerSideProps(context) {
   const { req } = context;
   const token = req.cookies.token;
@@ -50,7 +49,7 @@ export default function Admin({ user }) {
   const [currentAction, setCurrentAction] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { sendEmailToAllUsers } = useApiContext();
-
+  const { handleLogout } = useAuth();
   const collections = [
     {
       name: "Dashboard",
@@ -100,7 +99,7 @@ export default function Admin({ user }) {
   return (
     <div className="flex h-screen overflow-hidden">
       <aside
-        className={`fixed inset-0 top-0 left-0 lg:relative lg:w-64 w-64 bg-gray-800 text-white flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed inset-0 top-0 z-30 left-0 lg:relative lg:w-64 w-64 bg-gray-800 text-white flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -123,15 +122,19 @@ export default function Admin({ user }) {
         </nav>
       </aside>
 
-      <main className="flex-1 p-6 bg-gray-100 overflow-auto">
-        <header className="bg-white p-4 rounded-lg shadow-md mb-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Welcome, {user.name}!
-  
-            </h2>
-
-            <button
+      <div className=" overflow-auto">
+        {user && (
+          <div className="flex z-20 bg-gray-800 text-sm text-white py-2 sticky top-0 justify-between px-6 ">
+            <small> Welcome, {user.name}!</small>
+            <small onClick={handleLogout}>Log out</small>
+          </div>
+        )}
+        <main className="flex-1 p-6 bg-gray-100 overflow-auto">
+          <header className="bg-white p-4 rounded-lg shadow-md mb-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-lg block lg:hidden font-semibold text-gray-900">ABG</h2>
+              <h2 className="hidden lg:block font-semibold lg:text-xl text-gray-900">Department Of Animal Breeding And Genetics</h2>
+              <button
                 className="text-black block lg:hidden  focus:outline-none"
                 aria-label={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -142,12 +145,12 @@ export default function Admin({ user }) {
                   <FaBars className="w-3 h-3" />
                 )}
               </button>
-
-          </div>
-        </header>
-        <h4 className="text-sm text-gray-700 mb-4">{`Dashboard > ${currentTabName}`}</h4>
-        {renderComponent()}
-      </main>
+            </div>
+          </header>
+          <h4 className="text-sm text-gray-700 mb-4">{`Dashboard > ${currentTabName}`}</h4>
+          {renderComponent()}
+        </main>
+      </div>
     </div>
   );
 }

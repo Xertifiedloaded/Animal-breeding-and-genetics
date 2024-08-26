@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }) => {
       if (res.ok) {
         const { user, errors, token } = await res.json();
         console.log(user);
-
         if (errors) throw new Error(errors[0].message);
         // set token
         cookies.set('token', token, { expires: 7 });
@@ -72,7 +71,6 @@ export const AuthProvider = ({ children }) => {
     const fetchMe = async () => {
       try {
         const token = cookies.get('token');
-        console.log(`this is th user token ${token}`);
         const res = await fetch(`${API}/me`, {
           method: 'GET',
           credentials: 'include',
@@ -101,31 +99,23 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
 
-
-
-
-  const logout = useCallback(async () => {
+  const handleLogout = async () => {
     try {
-      const res = await fetch(`${API}/logout`, {
+      const response = await fetch('/api/auth/logout', {
         method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
       });
-
-      if (res.ok) {
-        Cookies.remove('token');
+      if (response.ok) {
+        window.location.href = '/auth/login'; 
         setUser(null);
-        setStatus('loggedOut');
+        setStatus('loggedOut'); 
       } else {
-        throw new Error('An error occurred while attempting to logout.');
+        console.error('Logout failed');
       }
-    } catch (e) {
-      console.error(e);
-      throw new Error('An error occurred while attempting to logout.');
+    } catch (error) {
+      console.error('Logout error:', error);
     }
-  }, []);
+  };
+
 
 
 
@@ -180,8 +170,6 @@ export const AuthProvider = ({ children }) => {
 
       if (res.ok) {
         const { data, errors } = await res.json();
-      
-
         if (errors) throw new Error(errors[0].message);
         setUser(data);
         console.log(user);
@@ -201,7 +189,7 @@ export const AuthProvider = ({ children }) => {
         user,
         setUser,
         login,
-        logout,
+        handleLogout,
         create,
         resetPassword,
         forgotPassword,

@@ -103,11 +103,11 @@ export default function DataTable() {
           </div>
 
           {searchTerm && suggestions.length > 0 && (
-            <ul className="mb-4 border border-gray-300 rounded-md">
+            <ul className="mb-4 border h-[200px] overflow-auto border-gray-300 rounded-md">
               {suggestions.map((suggestion, index) => (
                 <li
                   key={index}
-                  className="p-2 cursor-pointer hover:bg-gray-100"
+                  className="p-2 cursor-pointer text-sm hover:bg-gray-100"
                   onClick={() => {
                     setSearchTerm(suggestion.firstName + " " + suggestion.lastName);
                     setFilteredData([suggestion]);
