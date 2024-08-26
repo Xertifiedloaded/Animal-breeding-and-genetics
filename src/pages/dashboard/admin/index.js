@@ -7,7 +7,8 @@ import { useApiContext } from "@/context-provider/ApiProvider";
 import { useAuth } from "@/context-provider/AuthProvider";
 
 // const developmentUrl = "http://localhost:3000";
-const developmentUrl = "www.abg-funaab.com.ng";
+
+const developmentUrl = "https://www.abg-funaab.com.ng";
 export async function getServerSideProps(context) {
   const { req } = context;
   const token = req.cookies.token;
