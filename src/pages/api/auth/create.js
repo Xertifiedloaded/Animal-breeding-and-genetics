@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         from: "horllypizzy@gmail.com",
         to: email,
         subject: "Thank You for Registering",
-        html: `Your OTP is ${otp}`,
+        html: `Your OTP is ${otp} ${verificationLink}`,
       };
       const token = jwt.sign(
         { userId: newUser._id, email: newUser.email },

@@ -1,31 +1,50 @@
-import databaseConnection from "@/lib/database";
-import User from "@/model/User";
+import User from '@/model/User';
+import bcrypt from 'bcryptjs';
 
-export default async function handler(req, res) {
-  await databaseConnection();
-  if (req.method === "POST") {
-    try {
-      const { otp } = req.body;
-      if (!otp) {
-        return res.status(400).json({ message: "OTP is required" });
-      }
 
-      const user = await User.findOne({ otp });
-      if (!user) {
-        return res.status(400).json({ message: "Invalid OTP" });
-      }
-      user.isVerified = true;
-      user.otp = undefined; 
-      user.otpExpiry = undefined; 
-      await user.save();
-
-      res.status(200).json({ message: "User verified successfully", user });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Server error" });
-    }
-  } else {
-    res.setHeader("Allow", ["POST"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+const resetPassword = async (req, res) => {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method Not Allowed' });
   }
-}
+
+  try {
+    await connectToDatabase();
+
+    const { token } = req.query; 
+    const { newPassword, confirmPassword } = req.body;
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: 'Password Does Not Match' });
+    }
+
+    const { email } = req.decoded; 
+
+    const user = await User.findOne({
+      resetToken: token,
+      email: email,
+      verificationTokenExpiry: { $gt: new Date() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired reset token' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.resetToken = null;
+    user.resetTokenExpiry = null;
+
+    const resetLink = `http://localhost:3000/reset-password/${token}`;
+
+    await user.save();
+
+    resetPasswordEmail(email, resetLink);
+
+    res.status(200).json({ message: 'Password Reset Successfully', user });
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    res.status(500).json({ message: 'Error Resetting Password', error });
+  }
+};
+
+export default resetPassword;

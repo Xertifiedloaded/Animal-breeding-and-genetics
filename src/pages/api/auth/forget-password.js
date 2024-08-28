@@ -1,44 +1,49 @@
 
-import jwt from 'jsonwebtoken';
-import databaseConnection from "@/lib/database";
-import User from "@/model/User";
+import databaseConnection from '@/lib/database';
 import transporter from '@/lib/nodemailer';
+import User from '@/model/User';
+import { v4 as uuidv4 } from 'uuid';
 
 export default async function handler(req, res) {
-  if (req.method === "POST") {
+  await databaseConnection();
+
+  if (req.method === 'POST') {
     const { email } = req.body;
 
-    await databaseConnection();
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
 
     try {
       const user = await User.findOne({ email });
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(400).json({ message: 'User not found' });
       }
 
-      const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '15m' });
+      const resetToken = uuidv4();
+      const resetTokenExpiry = new Date();
+      resetTokenExpiry.setMinutes(resetTokenExpiry.getMinutes() + 10);
 
-      user.verificationToken = token;
-      user.verificationTokenExpiry = Date.now() + 15 * 60 * 1000; 
-
+      user.verificationToken = resetToken;
+      user.verificationTokenExpiry = resetTokenExpiry;
       await user.save();
 
-
-      const resetEmail = {
-
+      const resetLink = `$http://localhost:3000/reset-password?token=${resetToken}`;
+      const mailOptions = {
         to: email,
-        subject: "Password Reset Token",
-        html: `<p>You requested a password reset. Click the link below to reset your password:</p><p><a href="http://localhost:3000/reset-password?token=${token}">Reset Password</a></p><p>The link is valid for 15 minutes.</p>`,
+        subject: 'Password Reset Request',
+        html: `<p>This is your ${resetLink} to reset your password. This link is valid for 10 minutes.</p>`,
       };
 
-      await transporter.sendMail(resetEmail);
+      await transporter.sendMail(mailOptions);
 
-      res.status(200).json({ message: "Password reset token sent to email." });
+      res.status(200).json({ message: 'Reset link sent successfully' });
     } catch (error) {
-      console.error('Error sending password reset email:', error);
-      res.status(500).json({ message: "Server error." });
+      console.error(error);
+      res.status(500).json({ message: 'Error sending reset link', error: error.message });
     }
   } else {
-    res.status(405).json({ message: "Method not allowed" });
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
