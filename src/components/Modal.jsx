@@ -12,7 +12,7 @@ export default function ResponseModal({ closeModal, selectedRow }) {
   };
 
   return (
-    <div className="fixed  inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed  inset-0 z-50 flex  items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl mx-4 sm:mx-6 lg:mx-8 transform transition-all duration-300 ease-in-out">
         
         <div className="flex items-center mb-6">

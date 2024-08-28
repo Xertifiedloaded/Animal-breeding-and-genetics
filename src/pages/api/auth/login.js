@@ -1,36 +1,40 @@
+import databaseConnection from "@/lib/database";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { serialize } from "cookie";
-import databaseConnection from "@/lib/database";
 import User from "@/model/User";
 
 export default async function handler(req, res) {
   await databaseConnection();
-  if (req.method === "GET") {
-    try {
-      const admin = await User.find().sort({ _id: -1 });
-      if (!admin) {
-        return res.status(404).json({ message: "admin not found" });
-      }
-      res.status(200).json(admin);
-    } catch (error) {
-      res.status(500).json({ message: "Server error", error: error.message });
-    }
 
-    
-  } else if (req.method === "POST") {
+  if (req.method === "POST") {
     const { email, password } = req.body;
+
     try {
       const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(400).json({ message: "Invalid email or password" });
+      }
+
+      if (!user.isVerified) {
+        return res.status(403).json({ message: "Account not verified. Please verify your OTP." });
+      }
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
         return res.status(400).json({ message: "Invalid email or password" });
       }
 
-      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "1h",
-      });
+      const token = jwt.sign(
+        {
+          email: user.email,
+          userId: user.userId,
+          name: user.username,
+          token: user.token,
+        },
+        process.env.JWT_SECRET
+      );
+      user.token = token;
 
       const cookie = serialize("token", token, {
         httpOnly: true,
