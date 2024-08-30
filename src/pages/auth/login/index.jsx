@@ -10,9 +10,8 @@ import { useAuth } from "@/context-provider/AuthProvider";
 const Login = () => {
     const router = useRouter()
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
     const styleName = 'w-full bg-blue-500 border-0 outline-none  bg-black text-white  border border-black py-3 mt-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300'
-    const { login, } = useAuth()
+    const { login, error, setError } = useAuth()
     const [payload, setPayload] = useState({
         email: "",
         password: "",
@@ -20,6 +19,9 @@ const Login = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        if (error) {
+            setError(null);
+        }
         setPayload(prevData => ({
             ...prevData,
             [name]: value,
@@ -46,9 +48,9 @@ const Login = () => {
                 <div className="bgImage lg:p-10 p-4 grid items-center lg:block   h-screen lg:h-full">
                     <form onSubmit={handleSubmit} className="">
                         <h2 className="text-4xl font-semibold mb-4">Login</h2>
-                        {/* {error && <p className="text-red-500 mb-4">{error}</p>} */}
+                        {error && <small className="text-red-500 mb-4">{error}</small>}
                         <LoginInput payload={payload} handleChange={handleChange} />
-                        <Button text={loading?"loading":'Login'} styles={styleName} type='submit' />
+                        <Button text={loading ? "loading" : 'Login'} styles={styleName} type='submit' />
                     </form>
                 </div>
 

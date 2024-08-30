@@ -1,92 +1,93 @@
-'use client'
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import cookies from 'js-cookie'
+"use client";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import cookies from "js-cookie";
 const Context = createContext({});
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState();
   const [status, setStatus] = useState(undefined);
-  const API = '/api/auth';
+  const [error, setError] = useState(null);
+  const API = "/api/auth";
+
 
   const create = useCallback(async (payload) => {
     try {
       const res = await fetch(`${API}/create`, {
-        method: 'POST',
-        credentials: 'include',
+        method: "POST",
+        credentials: "include",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
 
       if (res.ok) {
-        const { data, errors } = await res.json();
-        if (errors) throw new Error(errors[0].message);
-        console.log(data);
-        
+        const { data } = await res.json();
+        setError(null);
         setUser(data?.loginUser?.user);
-        setStatus('loggedIn');
+        setStatus("loggedIn");
       } else {
-        throw new Error('Invalid login');
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Invalid login");
       }
-    } catch (e) {
-      console.error(e);
-      throw new Error('An error occurred while attempting to create an account');
+    } catch (error) {
+      setError(error.message);
     }
   }, []);
-
-
-
 
   const login = useCallback(async (payload) => {
     try {
       const res = await fetch(`${API}/login`, {
-        method: 'POST',
-        credentials: 'include',
+        method: "POST",
+        credentials: "include",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
-console.log(res);
 
       if (res.ok) {
-        const { user, errors, token } = await res.json();
-        console.log(user);
-        if (errors) throw new Error(errors[0].message);
-        // set token
-        cookies.set('token', token, { expires: 7 });
-        console.log(token);
+        const { user, token } = await res.json();
+        console.log(error);
+        if (error) throw new Error(error[0].message);
+        setError(null);
+        cookies.set("token", token, { expires: 7 });
+        // console.log(token);
         setUser(user);
-        setStatus('loggedIn');
+        setStatus("loggedIn");
         return user;
       } else {
-        throw new Error('Invalid login');
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Invalid login");
       }
-    } catch (e) {
-      console.error(e);
-      throw new Error('An error occurred while attempting to login.');
+    } catch (error) {
+      setError(error.message);
+      throw new Error("An error occurred while attempting to login.");
     }
   }, []);
-
-
 
   useEffect(() => {
     const fetchMe = async () => {
       try {
-        const token = cookies.get('token');
+        const token = cookies.get("token");
         const res = await fetch(`${API}/me`, {
-          method: 'GET',
-          credentials: 'include',
+          method: "GET",
+          credentials: "include",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         });
 
         if (res.ok) {
           const { user: meUser } = await res.json();
           setUser(meUser || null);
-          setStatus(meUser ? 'loggedIn' : undefined);
+          setStatus(meUser ? "loggedIn" : undefined);
         } else {
           setUser(null);
           setStatus(undefined);
@@ -101,41 +102,31 @@ console.log(res);
     fetchMe();
   }, []);
 
-
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
       });
       if (response.ok) {
-        window.location.href = '/auth/login'; 
+        window.location.href = "/auth/login";
         setUser(null);
-        setStatus('loggedOut'); 
+        setStatus("loggedOut");
       } else {
-        console.error('Logout failed');
+        console.error("Logout failed");
       }
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
   };
-
-
-
-
-
-
-
-
-
 
   // Forgot password
   const forgotPassword = useCallback(async (args) => {
     try {
       const res = await fetch(`${API}/forgot-password`, {
-        method: 'POST',
-        credentials: 'include',
+        method: "POST",
+        credentials: "include",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: args.email,
@@ -147,11 +138,13 @@ console.log(res);
         if (errors) throw new Error(errors[0].message);
         setUser(data);
       } else {
-        throw new Error('Error in forgot password process.');
+        throw new Error("Error in forgot password process.");
       }
     } catch (e) {
       console.error(e);
-      throw new Error('An error occurred while attempting to reset the password.');
+      throw new Error(
+        "An error occurred while attempting to reset the password."
+      );
     }
   }, []);
 
@@ -159,10 +152,10 @@ console.log(res);
   const resetPassword = useCallback(async (args) => {
     try {
       const res = await fetch(`${API}/reset-password`, {
-        method: 'POST',
-        credentials: 'include',
+        method: "POST",
+        credentials: "include",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           password: args.password,
@@ -176,13 +169,15 @@ console.log(res);
         if (errors) throw new Error(errors[0].message);
         setUser(data);
         console.log(user);
-        setStatus(data ? 'loggedIn' : undefined);
+        setStatus(data ? "loggedIn" : undefined);
       } else {
-        throw new Error('Error in reset password process.');
+        throw new Error("Error in reset password process.");
       }
     } catch (e) {
       console.error(e);
-      throw new Error('An error occurred while attempting to reset the password.');
+      throw new Error(
+        "An error occurred while attempting to reset the password."
+      );
     }
   }, []);
 
@@ -197,6 +192,8 @@ console.log(res);
         resetPassword,
         forgotPassword,
         status,
+        setError,
+        error
       }}
     >
       {children}
