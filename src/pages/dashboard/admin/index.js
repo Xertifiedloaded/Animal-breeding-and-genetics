@@ -98,7 +98,7 @@ export default function Admin({ user }) {
   const currentTabName = collections[currentAction].name;
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen  overflow-hidden">
       <aside
         className={`fixed inset-0 top-0 z-30 left-0 lg:relative lg:w-64 w-64 bg-gray-800 text-white flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -123,7 +123,7 @@ export default function Admin({ user }) {
         </nav>
       </aside>
 
-      <div className=" overflow-auto">
+      <div className=" overflow-auto w-full">
         {user && (
           <div className="flex z-20 bg-gray-800 text-sm text-white py-2 sticky top-0 justify-between px-6 ">
             <small> Welcome, {user.name}!</small>
