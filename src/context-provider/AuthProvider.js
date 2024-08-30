@@ -21,6 +21,8 @@ export const AuthProvider = ({ children }) => {
       if (res.ok) {
         const { data, errors } = await res.json();
         if (errors) throw new Error(errors[0].message);
+        console.log(data);
+        
         setUser(data?.loginUser?.user);
         setStatus('loggedIn');
       } else {
@@ -45,6 +47,7 @@ export const AuthProvider = ({ children }) => {
         },
         body: JSON.stringify(payload),
       });
+console.log(res);
 
       if (res.ok) {
         const { user, errors, token } = await res.json();
