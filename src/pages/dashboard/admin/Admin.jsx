@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Login from "@/pages/auth/login";
 
 const AdminsPage = () => {
   const [admins, setAdmins] = useState([]);
@@ -8,7 +9,8 @@ const AdminsPage = () => {
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
-        const response = await axios.get("/api/auth/login");
+        const response = await axios.get("/api/admins");
+        Login
         setAdmins(response.data);
       } catch (error) {
         console.error("Failed to fetch admins", error);
