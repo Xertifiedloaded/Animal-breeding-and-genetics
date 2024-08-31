@@ -14,7 +14,6 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const API = "/api/auth";
 
-
   const create = useCallback(async (payload) => {
     try {
       const res = await fetch(`${API}/create`, {
@@ -120,33 +119,33 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Forgot password
-  const forgotPassword = useCallback(async (args) => {
+  const forgotPassword = useCallback(async (payload) => {
     try {
-      const res = await fetch(`${API}/forgot-password`, {
+      const res = await fetch(`${API}/forget-password`, {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: args.email,
-        }),
+        body: JSON.stringify(payload),
       });
-
+  
       if (res.ok) {
         const { data, errors } = await res.json();
-        if (errors) throw new Error(errors[0].message);
+        if (errors) throw new Error(errors[0]?.message || "Unknown error");
         setUser(data);
       } else {
-        throw new Error("Error in forgot password process.");
+        const errorResponse = await res.json();
+        throw new Error(errorResponse.message || "Error in forgot password process.");
       }
     } catch (e) {
-      console.error(e);
-      throw new Error(
-        "An error occurred while attempting to reset the password."
-      );
+      console.error("Forgot Password Error:", e);
+      throw new Error("An error occurred while attempting to reset the password.");
     }
-  }, []);
+  }, [API]); 
+  
+
+
 
   // Reset password
   const resetPassword = useCallback(async (args) => {
@@ -193,7 +192,7 @@ export const AuthProvider = ({ children }) => {
         forgotPassword,
         status,
         setError,
-        error
+        error,
       }}
     >
       {children}

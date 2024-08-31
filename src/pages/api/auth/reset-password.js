@@ -1,42 +1,39 @@
-import bcrypt from 'bcryptjs';
 import databaseConnection from '@/lib/database';
 import User from '@/model/User';
 
 export default async function handler(req, res) {
-  await databaseConnection();
+  await databaseConnection(); 
 
   if (req.method === 'POST') {
-    const { newPassword, confirmPassword } = req.body;
-    const { token } = req.query; 
+    // Extract reset token and new password from request
+    const { resetToken, newPassword } = req.body; 
 
-    if (!token || !newPassword || !confirmPassword) {
-      return res.status(400).json({ message: 'All fields are required' });
-    }
-
-    if (newPassword !== confirmPassword) {
-      return res.status(400).json({ message: 'Passwords do not match' });
+    if (!resetToken || !newPassword) {
+      return res.status(400).json({ message: 'Invalid request. Token and new password are required.' });
     }
 
     try {
-    
+      // Find user with the reset token and ensure token is not expired
       const user = await User.findOne({
-        verificationToken: token,
-        verificationTokenExpiry: { $gt: new Date() },
+        verificationToken: resetToken,
+        verificationTokenExpiry: { $gt: new Date() }, // Token should still be valid
       });
 
       if (!user) {
-        return res.status(400).json({ message: 'Invalid or expired token' });
+        return res.status(400).json({ message: 'Invalid or expired reset token' });
       }
 
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-    
-      user.password = hashedPassword;
-      user.verificationToken = null; 
-      user.verificationTokenExpiry = null; 
+      // Update the user's password directly; Mongoose pre-save middleware will hash it
+      user.password = newPassword;
 
-      await user.save();
+      // Clear reset token fields
+      user.verificationToken = undefined;
+      user.verificationTokenExpiry = undefined;
 
-      res.status(200).json({ message: 'Password reset successfully' });
+      await user.save(); 
+      // Password will be hashed by pre-save middleware
+
+      res.status(200).json({ message: 'Password updated successfully' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error resetting password', error: error.message });

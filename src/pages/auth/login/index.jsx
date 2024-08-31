@@ -6,6 +6,7 @@ import cookies from 'js-cookie'
 import { LoginInput } from "@/components/Input";
 import Button from "@/components/Button";
 import { useAuth } from "@/context-provider/AuthProvider";
+import Link from "next/link";
 
 const Login = () => {
     const router = useRouter()
@@ -51,6 +52,10 @@ const Login = () => {
                         {error && <small className="text-red-500 mb-4">{error}</small>}
                         <LoginInput payload={payload} handleChange={handleChange} />
                         <Button text={loading ? "loading" : 'Login'} styles={styleName} type='submit' />
+                        <div className="flex justify-between mt-2">
+                            <Link className="text-xs font-medium" href='/auth/create'>You dont Have an Account? <span className="text-blue-600">Register</span></Link>
+                            <Link className="text-xs font-medium underline" href='/auth/forget-password '>Forget Password</Link>
+                        </div>
                     </form>
                 </div>
 
