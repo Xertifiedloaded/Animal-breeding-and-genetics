@@ -1,10 +1,13 @@
 import ConfirmationTemplate from "@/lib/ConfirmationTemplate";
 import databaseConnection from "@/lib/database";
+import {
+  generateAdminMailNotification,
+  generateFeedbackEmail,
+} from "@/lib/GenerateFeedBackEmail";
 import { alumniSchema } from "@/lib/Joi";
 import transporter from "@/lib/nodemailer";
-import ThankYouTemplate from "@/lib/ThankYouTemplate";
-import AlumniModel from "@/model/AlumniModel";
 
+import AlumniModel from "@/model/AlumniModel";
 
 export default async function handler(req, res) {
   await databaseConnection();
@@ -21,7 +24,9 @@ export default async function handler(req, res) {
       break;
     case "POST":
       try {
-        const { error, value } = alumniSchema.validate(req.body, { abortEarly: false });
+        const { error, value } = alumniSchema.validate(req.body, {
+          abortEarly: false,
+        });
 
         if (error) {
           const validationErrors = {};
@@ -36,20 +41,58 @@ export default async function handler(req, res) {
         }
 
         const alumni = await AlumniModel.create(value);
-        const { emailAddress, firstName } = value;
+        const {
+          firstName,
+          middleName,
+          lastName,
+          emailAddress,
+          phoneNumber,
+          graduatedYear,
+          supervisor,
+          locationOrCountry,
+          previousJob,
+          currentJob,
+          advice,
+        } = value;
+console.log(value);
+
+
         const adminMailOptions = {
           from: emailAddress,
-          to: 'horllypizzy@gmail.com',
+          to: "sandaaj@funaab.edu.ng",
           subject: "New Form Received",
-          html: ConfirmationTemplate({ firstName, emailAddress }),
+          html: generateAdminMailNotification(
+            firstName,
+            middleName,
+            lastName,
+            emailAddress,
+            phoneNumber,
+            graduatedYear,
+            supervisor,
+            locationOrCountry,
+            previousJob,
+            currentJob,
+            advice,
+          ),
         };
 
-
         const customerMailOptions = {
-          from: 'horllypizzy@gmail.com',
+          from: "sandaaj@funaab.edu.ng",
           to: emailAddress,
           subject: "Thank You for Your Response",
-          html: ThankYouTemplate({ firstName }), 
+          html: generateFeedbackEmail(
+            firstName,
+            middleName,
+            lastName,
+            emailAddress,
+            phoneNumber,
+            graduatedYear,
+            supervisor,
+            locationOrCountry,
+            previousJob,
+            currentJob,
+            advice,
+          ),
         };
 
         await transporter.sendMail(adminMailOptions);

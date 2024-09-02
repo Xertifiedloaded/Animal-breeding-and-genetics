@@ -1,4 +1,5 @@
 import databaseConnection from "@/lib/database";
+import { generateResetPasswordEmail } from "@/lib/generateOtpAndResetPasswordNotification";
 import transporter from "@/lib/nodemailer";
 import User from "@/model/User";
 import { v4 as uuidv4 } from "uuid";
@@ -28,11 +29,11 @@ export default async function handler(req, res) {
       await user.save();
 
       // send token with the frontend route link
-      const resetLink = `http://localhost:3000/auth/reset-password/${resetToken}`;
+      const resetLink = `https://www.abg-funaab.com.ng/auth/reset-password/${resetToken}`;
       const mailOptions = {
         to: email,
         subject: "Password Reset Request",
-        html: `<p>Click <a href="${resetLink}">here</a> to reset your password. This link is valid for 10 minutes.</p>`,
+        html: generateResetPasswordEmail(email,resetLink),
       };
 
       await transporter.sendMail(mailOptions);

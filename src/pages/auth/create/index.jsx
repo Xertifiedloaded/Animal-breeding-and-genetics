@@ -35,8 +35,9 @@ const CreateUser = () => {
             setLoading(true)
             await create(payload)
             router.push('/auth/otp')
+            setLoading(false)
         } catch (err) {
-
+            setLoading(false)
         }
     }
 

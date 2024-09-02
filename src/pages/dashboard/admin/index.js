@@ -5,10 +5,14 @@ import { MdDashboard, MdSettings } from "react-icons/md";
 import AdminsPage from "./Admin";
 import { useApiContext } from "@/context-provider/ApiProvider";
 import { useAuth } from "@/context-provider/AuthProvider";
+import Chart from "../Chart";
+import View from "../AdminDashboard";
 
-// const developmentUrl = "http://localhost:3000";
+// const isDevelopment = window.location.hostname === 'localhost';
+// const developmentUrl = "http://localhost:3001";
+const productionUrl = "https://www.abg-funaab.com.ng";
+// const apiUrl = isDevelopment ? developmentUrl : productionUrl;
 
-const developmentUrl = "https://www.abg-funaab.com.ng";
 export async function getServerSideProps(context) {
   const { req } = context;
   const token = req.cookies.token;
@@ -21,7 +25,7 @@ export async function getServerSideProps(context) {
     };
   }
   try {
-    const response = await fetch(`${developmentUrl}/api/auth/me`, {
+    const response = await fetch(`${productionUrl}/api/auth/me`, {
       headers: {
         Cookie: `token=${token}`,
         "Content-Type": "application/json",
@@ -133,8 +137,12 @@ export default function Admin({ user }) {
         <main className="flex-1 p-6 bg-gray-100 overflow-auto">
           <header className="bg-white p-4 rounded-lg shadow-md mb-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-lg block lg:hidden font-semibold text-gray-900">ABG</h2>
-              <h2 className="hidden lg:block font-semibold lg:text-xl text-gray-900">Department Of Animal Breeding And Genetics</h2>
+              <h2 className="text-lg block lg:hidden font-semibold text-gray-900">
+                ABG
+              </h2>
+              <h2 className="hidden lg:block font-semibold lg:text-xl text-gray-900">
+                Department Of Animal Breeding And Genetics
+              </h2>
               <button
                 className="text-black block lg:hidden  focus:outline-none"
                 aria-label={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}
@@ -148,6 +156,7 @@ export default function Admin({ user }) {
               </button>
             </div>
           </header>
+          <View />
           <h4 className="text-sm text-gray-700 mb-4">{`Dashboard > ${currentTabName}`}</h4>
           {renderComponent()}
         </main>

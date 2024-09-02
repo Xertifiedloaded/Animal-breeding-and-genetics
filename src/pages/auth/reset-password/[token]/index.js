@@ -41,6 +41,7 @@ const PasswordResetPage = () => {
         );
       }
       router.push("/auth/login");
+      setLoading(false);
     } catch (err) {
       setError(err.message);
     } finally {

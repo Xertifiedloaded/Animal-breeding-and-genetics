@@ -41,6 +41,8 @@ export const ApiProvider = ({ children }) => {
 
 
 
+  
+
   const sendEmailToAllUsers = () => {
     if (emailAddresses) {
       console.log('Sending email to:', emailAddresses);

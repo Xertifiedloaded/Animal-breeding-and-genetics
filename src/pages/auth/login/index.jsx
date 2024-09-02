@@ -36,7 +36,9 @@ const Login = () => {
             await login(payload)
             cookies.set('loggedIn', true)
             router.push('/dashboard/admin')
+            setLoading(false)
         } catch (err) {
+            setLoading(false)
             setError(err.message)
         }
     }

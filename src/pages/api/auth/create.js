@@ -1,4 +1,8 @@
 import databaseConnection from "@/lib/database";
+import {
+  generateResetPasswordEmail,
+  generateSignupOtpEmail,
+} from "@/lib/generateOtpAndResetPasswordNotification";
 import transporter from "@/lib/nodemailer";
 import User from "@/model/User";
 import { generateOTP } from "@/utils/Otp";
@@ -24,7 +28,7 @@ export default async function handler(req, res) {
       const OTPverificationToken = jwt.sign({ otp }, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
-      const verificationLink = `http://localhost:3000/verify/auth/${OTPverificationToken}`;
+      const verificationLink = `https://www.abg-funaab.com.ng/verify/auth/${OTPverificationToken}`;
 
       const newUser = await User.create({
         name,
@@ -35,10 +39,10 @@ export default async function handler(req, res) {
       });
 
       const otpEmailOption = {
-        from: "horllypizzy@gmail.com",
+        from: "sandaaj@funaab.edu.ng",
         to: email,
         subject: "Thank You for Registering",
-        html: `Your OTP is ${otp} ${verificationLink}`,
+        html: generateSignupOtpEmail(email, otp),
       };
       const token = jwt.sign(
         { userId: newUser._id, email: newUser.email },
