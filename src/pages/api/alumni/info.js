@@ -1,4 +1,4 @@
-import ConfirmationTemplate from "@/lib/ConfirmationTemplate";
+
 import databaseConnection from "@/lib/database";
 import {
   generateAdminMailNotification,
@@ -54,7 +54,6 @@ export default async function handler(req, res) {
           currentJob,
           advice,
         } = value;
-console.log(value);
 
 
         const adminMailOptions = {
