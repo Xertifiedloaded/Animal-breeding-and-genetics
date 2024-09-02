@@ -15,6 +15,7 @@ export default function App({ Component, pageProps }) {
       <div className={`${poppin.className}`}>
         <AuthProvider>
           <ApiProvider>
+      
             <Component {...pageProps} />
           </ApiProvider>
         </AuthProvider>

@@ -1,6 +1,6 @@
 
 import { Head, Html, NextScript, Main } from "next/document";
-import { Fraunces, Manrope } from 'next/font/google'
+import { Analytics } from "@vercel/analytics/react"
 
 
 export default function RootLayout() {
@@ -9,6 +9,7 @@ export default function RootLayout() {
       <Head />
       <body>
         <Main />
+        <Analytics/>
         <NextScript />
       </body>
     </Html>
