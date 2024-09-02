@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 
 export const Context = createContext({});
+
 export const ApiProvider = ({ children }) => {
   const [row, setRow] = useState([]);
   const [locationData, setLocation] = useState([]);
@@ -41,7 +42,7 @@ export const ApiProvider = ({ children }) => {
 
 
 
-  
+
 
   const sendEmailToAllUsers = () => {
     if (emailAddresses) {
@@ -99,14 +100,6 @@ export const ApiProvider = ({ children }) => {
       setLoading(false);
     }
   };
-
-
-
-
-
-
-
-
 
 
   return (

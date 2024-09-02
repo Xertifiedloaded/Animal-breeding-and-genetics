@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
       if (res.ok) {
         const { data } = await res.json();
         setError(null);
-        setUser(data?.loginUser?.user);
+        setUser(data?.user);
         setStatus("loggedIn");
       } else {
         const errorData = await res.json();
@@ -118,67 +118,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Forgot password
-  const forgotPassword = useCallback(async (payload) => {
-    try {
-      const res = await fetch(`${API}/forget-password`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      if (res.ok) {
-        const { data, errors } = await res.json();
-        if (errors) throw new Error(errors[0]?.message || "Unknown error");
-        setUser(data);
-      } else {
-        const errorResponse = await res.json();
-        throw new Error(errorResponse.message || "Error in forgot password process.");
-      }
-    } catch (e) {
-      console.error("Forgot Password Error:", e);
-      throw new Error("An error occurred while attempting to reset the password.");
-    }
-  }, [API]); 
-  
 
-
-
-  // Reset password
-  const resetPassword = useCallback(async (args) => {
-    try {
-      const res = await fetch(`${API}/reset-password`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          password: args.password,
-          passwordConfirm: args.passwordConfirm,
-          token: args.token,
-        }),
-      });
-
-      if (res.ok) {
-        const { data, errors } = await res.json();
-        if (errors) throw new Error(errors[0].message);
-        setUser(data);
-        console.log(user);
-        setStatus(data ? "loggedIn" : undefined);
-      } else {
-        throw new Error("Error in reset password process.");
-      }
-    } catch (e) {
-      console.error(e);
-      throw new Error(
-        "An error occurred while attempting to reset the password."
-      );
-    }
-  }, []);
 
   return (
     <Context.Provider
@@ -188,8 +128,6 @@ export const AuthProvider = ({ children }) => {
         login,
         handleLogout,
         create,
-        resetPassword,
-        forgotPassword,
         status,
         setError,
         error,
