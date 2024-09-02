@@ -26,7 +26,7 @@ export default function Landing() {
           <div className="h-[100px] border border-red-600 border-t-0 border-b-0 border-l-0" />
         </div>
         <a
-          href="/shop"
+          href=""
           className="bg-blue-600 animate-pulse text-white py-3 px-6 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-300"
         >
           Join Us
