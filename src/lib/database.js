@@ -6,7 +6,7 @@ const databaseConnection = async () => {
   }
 
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect('mongodb+srv://certifiedloaded:4111@cluster0.se1ihme.mongodb.net/abgg');
     console.log("Database connected successfully");
   } catch (error) {
     console.error("Failed to connect to the database", error);

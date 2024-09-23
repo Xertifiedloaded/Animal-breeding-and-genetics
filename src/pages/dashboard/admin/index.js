@@ -5,7 +5,7 @@ import { MdDashboard, MdSettings } from "react-icons/md";
 import AdminsPage from "./Admin";
 import { useApiContext } from "@/context-provider/ApiProvider";
 import { useAuth } from "@/context-provider/AuthProvider";
-import Chart from "../Chart";
+
 import View from "../AdminDashboard";
 
 // const isDevelopment = window.location.hostname === 'localhost';
