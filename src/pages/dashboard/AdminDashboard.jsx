@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Chart from './Chart';
+
 
 const View = () => {
   const [responsesCount, setResponsesCount] = useState(0);
