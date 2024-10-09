@@ -62,7 +62,7 @@ export const generateResetPasswordEmail = (email, resetLink) => `
 `;
 
 
-export const generateSignupOtpEmail = (email, otp) => `
+export const generateSignupOtpEmail = (email, otp,verificationLink) => `
 <!DOCTYPE html>
 <html lang="en">
 
@@ -116,6 +116,7 @@ export const generateSignupOtpEmail = (email, otp) => `
             <p>Dear ${email},</p>
             <p>Thank you for signing up! To complete your registration, please use the OTP below to verify your email address:</p>
             <p><strong>OTP:</strong> ${otp}</p>
+            <p>${verificationLink}</p>
             <p>If you did not sign up for this account, please ignore this email.</p>
         </div>
           <p>Best regards,<br>Department of Animal Breeding And Genetics</p>

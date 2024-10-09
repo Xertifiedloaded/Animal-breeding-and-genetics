@@ -1,27 +1,61 @@
+import Joi from "joi";
+import { prisma } from "../../../lib/prisma";
+import databaseConnection from "../../../lib/database";
+import transporter from "../../../lib/nodemailer";
+import { generateAdminMailNotification, generateFeedbackEmail } from "../../../lib/GenerateFeedBackEmail";
 
-import databaseConnection from "@/lib/database";
-import {
-  generateAdminMailNotification,
-  generateFeedbackEmail,
-} from "@/lib/GenerateFeedBackEmail";
-import { alumniSchema } from "@/lib/Joi";
-import transporter from "@/lib/nodemailer";
 
-import AlumniModel from "@/model/AlumniModel";
+export const alumniSchema = Joi.object({
+  firstName: Joi.string().required().messages({
+    "string.empty": "firstName is required",
+  }),
+  lastName: Joi.string().required().messages({
+    "string.empty": "lastName is required",
+  }),
+  emailAddress: Joi.string().email().required().messages({
+    "string.empty": "emailAddress is required",
+    "string.email": "emailAddress must be a valid email",
+  }),
+  phoneNumber: Joi.string().required().messages({
+    "string.empty": "phoneNumber is required",
+  }),
+  graduatedYear: Joi.string().required().messages({
+    "string.empty": "graduatedYear is required",
+  }),
+  previousJob: Joi.string().allow(""),
+  currentJob: Joi.string().allow(""),
+  locationOrCountry: Joi.string().required().messages({
+    "string.empty": "locationOrCountry is required",
+  }),
+  supervisor: Joi.string().required().messages({
+    "string.empty": "supervisor is required",
+  }),
+  advice: Joi.string().required().messages({
+    "string.empty": "advice is required",
+  }),
+  middleName: Joi.string().allow(""),
+  social: Joi.string().allow(""),
+  sentAt: Joi.date().default(Date.now),
+});
 
 export default async function handler(req, res) {
-  await databaseConnection();
   const { method } = req;
+  await databaseConnection(); 
 
   switch (method) {
     case "GET":
       try {
-        const alumni = await AlumniModel.find().sort({ _id: -1 });
+        const alumni = await prisma.alumniInformation.findMany({
+          orderBy: {
+            sentAt: "desc",
+          },
+        });
         res.status(200).json({ success: true, data: alumni });
       } catch (error) {
-        res.status(400).json({ success: false, error: error.message });
+        res.status(500).json({ success: false, error: error.message });
       }
       break;
+
     case "POST":
       try {
         const { error, value } = alumniSchema.validate(req.body, {
@@ -40,7 +74,15 @@ export default async function handler(req, res) {
           });
         }
 
-        const alumni = await AlumniModel.create(value);
+        const sentAtDate = value.sentAt ? new Date(value.sentAt) : new Date();
+
+        const alumni = await prisma.alumniInformation.create({
+          data: {
+            ...value,
+            sentAt: sentAtDate,
+          },
+        });
+
         const {
           firstName,
           middleName,
@@ -53,6 +95,7 @@ export default async function handler(req, res) {
           previousJob,
           currentJob,
           advice,
+          social
         } = value;
 
 
@@ -72,6 +115,7 @@ export default async function handler(req, res) {
             previousJob,
             currentJob,
             advice,
+            social
           ),
         };
 
@@ -91,17 +135,20 @@ export default async function handler(req, res) {
             previousJob,
             currentJob,
             advice,
+            social
           ),
         };
 
+
         await transporter.sendMail(adminMailOptions);
         await transporter.sendMail(customerMailOptions);
-
+        
         res.status(201).json({ success: true, data: alumni });
       } catch (error) {
-        res.status(400).json({ success: false, error: error.message });
+        res.status(500).json({ success: false, error: error.message });
       }
       break;
+
     default:
       res.setHeader("Allow", ["GET", "POST"]);
       res.status(405).end(`Method ${method} Not Allowed`);

@@ -1,60 +1,21 @@
-import React, { useState } from "react";
-import DataTable from "./DashboardComponent";
-import { FaEnvelope, FaUser, FaBars, FaTimes } from "react-icons/fa";
-import { MdDashboard, MdSettings } from "react-icons/md";
-import AdminsPage from "./Admin";
-import { useApiContext } from "@/context-provider/ApiProvider";
-import { useAuth } from "@/context-provider/AuthProvider";
+import React, { useState } from "react"
+import DataTable from "./DashboardComponent"
+import { FaEnvelope, FaUser, FaBars, FaTimes } from "react-icons/fa"
+import { MdDashboard, MdSettings } from "react-icons/md"
+import AdminsPage from "./Admin"
+import { useApiContext } from "@/context-provider/ApiProvider"
+import { useSession, signOut } from "next-auth/react"
+import View from "../AdminDashboard"
+import ProtectedRoute from "../../../components/ProtectedRoute"
+import Header from "../../../components/Header"
 
-import View from "../AdminDashboard";
+function Admin() {
+  const [currentAction, setCurrentAction] = useState(0)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const { sendEmailToAllUsers } = useApiContext()
+  const { data: session } = useSession()
+  console.log(session?.user?.name)
 
-// const isDevelopment = window.location.hostname === 'localhost';
-// const developmentUrl = "http://localhost:3001";
-const productionUrl = "https://www.abg-funaab.com.ng";
-// const apiUrl = isDevelopment ? developmentUrl : productionUrl;
-
-export async function getServerSideProps(context) {
-  const { req } = context;
-  const token = req.cookies.token;
-  if (!token) {
-    return {
-      redirect: {
-        destination: "/auth/login",
-        permanent: false,
-      },
-    };
-  }
-  try {
-    const response = await fetch(`${productionUrl}/api/auth/me`, {
-      headers: {
-        Cookie: `token=${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch user");
-    }
-    const { user } = await response.json();
-    return {
-      props: { user },
-    };
-  } catch (error) {
-    console.error("Failed to fetch user:", error.message);
-    return {
-      redirect: {
-        destination: "/auth/login",
-        permanent: false,
-      },
-    };
-  }
-}
-
-export default function Admin({ user }) {
-  const [currentAction, setCurrentAction] = useState(0);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { sendEmailToAllUsers } = useApiContext();
-  const { handleLogout } = useAuth();
   const collections = [
     {
       name: "Dashboard",
@@ -76,33 +37,33 @@ export default function Admin({ user }) {
       icon: <FaEnvelope className="text-2xl" />,
       onClick: () => sendEmailToAllUsers(),
     },
-  ];
+  ]
 
   const toggleSidebar = () => {
-    setIsSidebarOpen((isSidebarOpen) => !isSidebarOpen);
-  };
+    setIsSidebarOpen((isSidebarOpen) => !isSidebarOpen)
+  }
 
   const handleActionClick = (action) => {
-    setCurrentAction(action);
-  };
+    setCurrentAction(action)
+  }
 
   const renderComponent = () => {
     switch (currentAction) {
       case 0:
-        return <DataTable user={user} />;
+        return <DataTable user={session?.user} />
       case 1:
-        return <AdminsPage />;
+        return <AdminsPage />
       case 2:
-        return "Settings Component";
+        return "Settings Component"
       default:
-        return null;
+        return null
     }
-  };
+  }
 
-  const currentTabName = collections[currentAction].name;
+  const currentTabName = collections[currentAction].name
 
   return (
-    <div className="flex h-screen  overflow-hidden">
+    <div className="flex h-screen overflow-hidden">
       <aside
         className={`fixed inset-0 top-0 z-30 left-0 lg:relative lg:w-64 w-64 bg-gray-800 text-white flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -117,23 +78,18 @@ export default function Admin({ user }) {
               <div
                 key={idx}
                 onClick={collection.onClick}
-                className="flex items-center space-x-3 mb-4  p-2 cursor-pointer hover:bg-gray-700 rounded-lg transition"
+                className="flex items-center space-x-3 mb-4 p-2 cursor-pointer hover:bg-gray-700 rounded-lg transition"
               >
                 {collection.icon}
-                <span className=" text-sm ">{collection.name}</span>
+                <span className="text-sm">{collection.name}</span>
               </div>
             ))}
           </div>
         </nav>
       </aside>
 
-      <div className=" overflow-auto w-full">
-        {user && (
-          <div className="flex z-20 bg-gray-800 text-sm text-white py-2 sticky top-0 justify-between px-6 ">
-            <small> Welcome, {user.name}!</small>
-            <small onClick={handleLogout}>Log out</small>
-          </div>
-        )}
+      <div className="overflow-auto w-full">
+        <Header session={session} />
         <main className="flex-1 p-6 bg-gray-100 overflow-auto">
           <header className="bg-white p-4 rounded-lg shadow-md mb-6">
             <div className="flex justify-between items-center">
@@ -144,9 +100,9 @@ export default function Admin({ user }) {
                 Department Of Animal Breeding And Genetics
               </h2>
               <button
-                className="text-black block lg:hidden  focus:outline-none"
+                className="text-black block lg:hidden focus:outline-none"
                 aria-label={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                onClick={toggleSidebar}
               >
                 {isSidebarOpen ? (
                   <FaTimes className="w-3 h-3" />
@@ -162,5 +118,7 @@ export default function Admin({ user }) {
         </main>
       </div>
     </div>
-  );
+  )
 }
+
+export default ProtectedRoute(Admin)

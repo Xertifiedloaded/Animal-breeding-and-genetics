@@ -70,6 +70,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  
   useEffect(() => {
     const fetchMe = async () => {
       try {

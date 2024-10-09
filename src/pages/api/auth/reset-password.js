@@ -1,37 +1,39 @@
 import databaseConnection from '@/lib/database';
-import User from '@/model/User';
+import { prisma } from '@/lib/prisma'; 
+import bcrypt from 'bcryptjs'; 
 
 export default async function handler(req, res) {
   await databaseConnection(); 
 
   if (req.method === 'POST') {
-    // Extract reset token and new password from request
     const { resetToken, newPassword } = req.body; 
-
     if (!resetToken || !newPassword) {
       return res.status(400).json({ message: 'Invalid request. Token and new password are required.' });
     }
 
     try {
-      // Find user with the reset token and ensure token is not expired
-      const user = await User.findOne({
-        verificationToken: resetToken,
-        verificationTokenExpiry: { $gt: new Date() }, // Token should still be valid
+
+      const user = await prisma.user.findFirst({
+        where: {
+          verificationToken: resetToken,
+          verificationTokenExpiry: {
+            gt: new Date() 
+          }
+        }
       });
 
       if (!user) {
         return res.status(400).json({ message: 'Invalid or expired reset token' });
       }
-
-      // Update the user's password directly; Mongoose pre-save middleware will hash it
-      user.password = newPassword;
-
-      // Clear reset token fields
-      user.verificationToken = undefined;
-      user.verificationTokenExpiry = undefined;
-
-      await user.save(); 
-      // Password will be hashed by pre-save middleware
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          password: hashedPassword,
+          verificationToken: null, 
+          verificationTokenExpiry: null, 
+        }
+      });
 
       res.status(200).json({ message: 'Password updated successfully' });
     } catch (error) {

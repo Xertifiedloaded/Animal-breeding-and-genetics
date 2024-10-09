@@ -1,7 +1,7 @@
 import databaseConnection from "@/lib/database";
 import { generateResetPasswordEmail } from "@/lib/generateOtpAndResetPasswordNotification";
 import transporter from "@/lib/nodemailer";
-import User from "@/model/User";
+import { prisma } from "@/lib/prisma"; 
 import { v4 as uuidv4 } from "uuid";
 
 export default async function handler(req, res) {
@@ -15,25 +15,32 @@ export default async function handler(req, res) {
     }
 
     try {
-      const user = await User.findOne({ email });
+      // Find the user by email using Prisma
+      const user = await prisma.user.findUnique({
+        where: { email },
+      });
+
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
 
       const resetToken = uuidv4();
       const resetTokenExpiry = new Date();
-      resetTokenExpiry.setMinutes(resetTokenExpiry.getMinutes() + 10); // Token valid for 10 minutes
+      resetTokenExpiry.setMinutes(resetTokenExpiry.getMinutes() + 10); 
 
-      user.verificationToken = resetToken;
-      user.verificationTokenExpiry = resetTokenExpiry;
-      await user.save();
+      await prisma.user.update({
+        where: { email },
+        data: {
+          verificationToken: resetToken,
+          verificationTokenExpiry: resetTokenExpiry,
+        },
+      });
 
-      // send token with the frontend route link
       const resetLink = `https://www.abg-funaab.com.ng/auth/reset-password/${resetToken}`;
       const mailOptions = {
         to: email,
         subject: "Password Reset Request",
-        html: generateResetPasswordEmail(email,resetLink),
+        html: generateResetPasswordEmail(email, resetLink),
       };
 
       await transporter.sendMail(mailOptions);
@@ -41,9 +48,7 @@ export default async function handler(req, res) {
       res.status(200).json({ message: "Reset link sent successfully" });
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .json({ message: "Error sending reset link", error: error.message });
+      res.status(500).json({ message: "Error sending reset link", error: error.message });
     }
   } else {
     res.setHeader("Allow", ["POST"]);

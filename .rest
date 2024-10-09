@@ -1,0 +1,13 @@
+# # Get all alumni records
+# GET http://localhost:3000/api/alumni
+# Content-Type: application/json
+
+POST http://localhost:3000/api/auth/create
+Content-Type: application/json
+
+{
+"name":"olaitan",
+"password":"admin",
+"email":"makindeolaitan0111@gmail.com",
+"passwordConfirm":"admin"
+}

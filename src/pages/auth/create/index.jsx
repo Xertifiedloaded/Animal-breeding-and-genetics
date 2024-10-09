@@ -4,9 +4,10 @@ import { useRouter } from "next/router";
 import FormComponent from "@/components/FormComponent";
 import { useAuth } from "@/context-provider/AuthProvider";
 import Link from "next/link";
+import ProtectedRoute from "../../../components/ProtectedRoute";
 
 const CreateUser = () => {
-    const styleName = 'w-full bg-blue-500 outline-none  bg-black text-white  border border-black py-3 mt-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300'
+    const styleName = 'w-full outline-none  bg-black text-white  border border-black py-3 mt-3 rounded-lg focus:outline-none focus:ring focus:ring-blue-300'
     const { create, error, setError } = useAuth()
     const [loading, setLoading] = useState(false);
     const router = useRouter()
@@ -34,7 +35,7 @@ const CreateUser = () => {
         try {
             setLoading(true)
             await create(payload)
-            router.push('/auth/otp')
+            router.push('/auth/login')
             setLoading(false)
         } catch (err) {
             setLoading(false)
@@ -56,4 +57,4 @@ const CreateUser = () => {
     )
 }
 
-export default CreateUser
+export default ProtectedRoute(CreateUser)
