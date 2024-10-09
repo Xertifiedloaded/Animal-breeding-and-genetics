@@ -23,21 +23,21 @@ const Header = ({ session }) => {
   };
 
   return (
-    <div className="flex justify-between items-center bg-gray-800 text-white p-4 sticky top-0 z-20">
+    <div className="flex text-xs justify-between items-center bg-gray-800 text-white p-4 sticky top-0 z-20">
       {session ? (
         <>
           <div className="flex space-x-4">
             {router.pathname === '/' ? (
               <button 
                 onClick={() => handleNavigation('/dashboard/admin')}
-                className={`px-4 py-2 rounded hover:bg-gray-600`}
+                className={`px-1 py-2 rounded hover:bg-gray-600`}
               >
                 View Dashboard
               </button>
             ) : (
               <button 
                 onClick={() => handleNavigation('/')}
-                className={`px-4 py-2 rounded hover:bg-gray-600`}
+                className={`px-1 py-2 rounded hover:bg-gray-600`}
               >
                 View as Visitor
               </button>
