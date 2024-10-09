@@ -15,9 +15,9 @@ const AdminsPage = () => {
       } catch (error) {
         console.error("Failed to fetch admins", error);
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
     fetchAdmins();
   }, []);
