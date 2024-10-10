@@ -18,7 +18,7 @@ export default function ResponseModal({ closeModal, selectedRow }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+    <div className="fixed inset-0 z-50 flex text-xs lg:text-sm items-center justify-center bg-black bg-opacity-60">
       <div className="bg-white rounded-lg shadow-xl p-6 mx-4 max-w-md sm:max-w-lg lg:max-w-2xl transition-transform duration-300 ease-in-out transform">
         <div className="flex items-center mb-4">
           <img
