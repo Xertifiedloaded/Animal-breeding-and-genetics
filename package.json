@@ -44,6 +44,7 @@
     "next-cloudinary": "^6.10.1",
     "next-connect": "^1.0.0",
     "next-session": "^4.0.5",
+    "node-fetch": "^3.3.2",
     "nodemailer": "^6.9.14",
     "react": "^18",
     "react-dom": "^18",

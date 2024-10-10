@@ -1,8 +1,7 @@
 import nodemailer from "nodemailer";
-const productionUrl = "ncbowkqipaclghnz";
-const localUrl = "gghllvlccbfdxupv";
-const productionMail='sandaaj@funaab.edu.ng'
-const localMail='horllypizzy@gmail.com'
+const productionUrl = process.env.PRODUCTION_URL;
+const productionMail = process.env.PRODUCTION_MAIL;
+
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
