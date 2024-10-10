@@ -19,15 +19,15 @@ export default function ResponseModal({ closeModal, selectedRow }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4 sm:mx-6 lg:max-w-2xl transition-transform duration-300 ease-in-out transform">
+      <div className="bg-white rounded-lg shadow-xl p-6 mx-4 max-w-md sm:max-w-lg lg:max-w-2xl transition-transform duration-300 ease-in-out transform">
         <div className="flex items-center mb-4">
           <img
             src={selectedRow.avatar || 'https://via.placeholder.com/150'}
             alt="User Avatar"
-            className="w-16 h-16 rounded-full border-2 border-blue-400 shadow-md mr-4"
+            className="w-20 h-20 rounded-full border-2 border-blue-400 shadow-md mr-4"
           />
           <div className="flex flex-col">
-            <h2 className="text-3xl font-semibold text-gray-800">
+            <h2 className="text-2xl font-semibold text-gray-800">
               {selectedRow.firstName} {selectedRow.lastName}
             </h2>
             <p className="text-sm text-gray-500 italic">{selectedRow.currentJob}</p>
@@ -86,7 +86,7 @@ export default function ResponseModal({ closeModal, selectedRow }) {
         <div className="flex justify-center mt-4 space-x-4">
           {selectedRow.linkedin && (
             <a
-              href={`https://linkedin.com/in/${selectedRow.linkedin}`}
+              href={`https://linkedin.com/in/`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-700 hover:text-blue-800 transition duration-150"
@@ -96,7 +96,7 @@ export default function ResponseModal({ closeModal, selectedRow }) {
           )}
           {selectedRow.twitter && (
             <a
-              href={`https://twitter.com/${selectedRow.twitter}`}
+              href={`https://twitter.com/`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 hover:text-blue-600 transition duration-150"
@@ -106,7 +106,7 @@ export default function ResponseModal({ closeModal, selectedRow }) {
           )}
         </div>
 
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-end mt-6">
           <button
             onClick={closeModal}
             className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition ease-in-out duration-150"
