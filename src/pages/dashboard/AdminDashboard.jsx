@@ -31,7 +31,7 @@ const View = () => {
   }, []);
 
   return (
-    <div className=" bg-gray-100 lg:py-6 ">
+    <div className=" bg-gray-100 lg:py-6 px-4 ">
       <header className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Dashboard Analytics</h1>
       </header>

@@ -90,7 +90,7 @@ function Admin() {
 
       <div className="overflow-auto w-full">
         <Header session={session} />
-        <main className="flex-1 p-6 bg-gray-100 overflow-auto">
+        <main className="flex-1 md:py-6 md:px-2 bg-gray-100 overflow-auto">
           <header className="bg-white p-4 rounded-lg shadow-md mb-6">
             <div className="flex justify-between items-center">
               <h2 className="text-lg block lg:hidden font-semibold text-gray-900">
@@ -113,7 +113,7 @@ function Admin() {
             </div>
           </header>
           <View />
-          <h4 className="text-sm text-gray-700 mb-4">{`Dashboard > ${currentTabName}`}</h4>
+          <h4 className="text-sm text-gray-700 my-4 lg:my-0 px-4">{`Dashboard > ${currentTabName}`}</h4>
           {renderComponent()}
         </main>
       </div>

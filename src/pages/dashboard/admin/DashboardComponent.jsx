@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ResponseModal from "@/components/Modal";
+import Loader from "../../../components/loader";
 
 export default function DataTable() {
   const [row, setRow] = useState([]);
@@ -57,7 +58,18 @@ export default function DataTable() {
 
   const exportToCSV = () => {
     const csvContent = `data:text/csv;charset=utf-8,${[
-      ["First Name", "Last Name", "Middle Name", "Email Address", "Graduated Year", "Location/Country", "Phone Number", "Supervisor", "Previous Job", "Current Job"],
+      [
+        "First Name",
+        "Last Name",
+        "Middle Name",
+        "Email Address",
+        "Graduated Year",
+        "Location/Country",
+        "Phone Number",
+        "Supervisor",
+        "Previous Job",
+        "Current Job",
+      ],
       ...filteredData.map((item) => [
         item.firstName,
         item.lastName,
@@ -68,7 +80,7 @@ export default function DataTable() {
         item.phoneNumber,
         item.supervisor,
         item.previousJob,
-        item.currentJob
+        item.currentJob,
       ]),
     ]
       .map((e) => e.join(","))
@@ -82,21 +94,19 @@ export default function DataTable() {
 
   return (
     <>
-      <div className="min-h-screen">
-        <div className="mt-4 rounded-lg">
-          <div className="flex justify-between">
+      <div className="min-h-screen bg-gray-100 py-6 ">
+        <div className=" mx-auto bg-white rounded-lg shadow-lg p-4">
+          <div className="flex flex-col md:flex-row justify-between mb-4">
             <input
               type="text"
               value={searchTerm}
               onChange={handleSearchChange}
               placeholder="Search by First or Last Name..."
-              className="px-4 lg:w-[50%] w-[70%] py-2 placeholder:text-xs mb-4 border rounded-md"
+              className="mb-4 md:mb-0 md:w-1/2 px-4 py-2 placeholder:text-sm border rounded-md focus:outline-none focus:ring focus:ring-blue-400"
             />
             <button
               onClick={exportToCSV}
-              className="lg:px-3  px-2 lg:py-2 py-1 mb-4
-               text-white bg-gray-600 transition-all 
-               duration-500 text-xs rounded-md hover:bg-blue-600"
+              className="lg:px-4 lg:py-2 px-3 py-1 text-white bg-gray-600 transition-all duration-500 text-sm rounded-md hover:bg-blue-600"
             >
               Export to CSV
             </button>
@@ -109,7 +119,7 @@ export default function DataTable() {
                   key={index}
                   className="p-2 cursor-pointer text-sm hover:bg-gray-100"
                   onClick={() => {
-                    setSearchTerm(suggestion.firstName + " " + suggestion.lastName);
+                    setSearchTerm(`${suggestion.firstName} ${suggestion.lastName}`);
                     setFilteredData([suggestion]);
                     setSuggestions([]);
                   }}
@@ -121,39 +131,39 @@ export default function DataTable() {
           )}
 
           {loading ? (
-            <div className="flex justify-center items-center">
-              <p>Loading...</p>
-            </div>
+            <Loader />
           ) : (
-            <div className="overflow-x-auto text-xs lg:text-sm rounded-lg shadow-md">
-              <table className="min-w-full text-[13px] lg:text-sm divide-y  divide-gray-200">
-                <thead className="bg-gray-50  whitespace-nowrap">
+            <div className="overflow-x-auto rounded-lg shadow-md">
+              <table className="min-w-full text-xs md:text-sm divide-y divide-gray-200">
+                <thead className="bg-gray-50 whitespace-nowrap">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">First Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Middle Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email Address</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Graduated Year</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location/Country</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone Number</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supervisor</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Previous Job</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Job</th>
+                    {["First Name", "Last Name", "Middle Name", "Email Address", "Graduated Year", "Location/Country", "Phone Number", "Supervisor", "Previous Job", "Current Job"].map((header) => (
+                      <th
+                        key={header}
+                        className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        {header}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredData.map((item, index) => (
-                    <tr key={index} className="hover:bg-gray-50" onClick={() => handleRowClick(item)}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.firstName}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.lastName}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.middleName}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.emailAddress}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.graduatedYear}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.locationOrCountry}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">+{item.phoneNumber}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.supervisor}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.previousJob}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm truncate text-gray-700">{item.currentJob}</td>
+                    <tr
+                      key={index}
+                      className="hover:bg-gray-50 cursor-pointer"
+                      onClick={() => handleRowClick(item)}
+                    >
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{item.firstName}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{item.lastName}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{item.middleName}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{item.emailAddress}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{item.graduatedYear}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{item.locationOrCountry}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">+{item.phoneNumber}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{item.supervisor}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{item.previousJob}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 truncate">{item.currentJob}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -1,47 +1,46 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react"
+import axios from "axios"
+import Loader from "../../../components/loader"
 
 const AdminsPage = () => {
-  const [admins, setAdmins] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [deleting, setDeleting] = useState(null); 
+  const [admins, setAdmins] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [deleting, setDeleting] = useState(null)
 
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
-        const response = await axios.get("/api/admins");
-        console.log(response);
-        setAdmins(response.data);
+        const response = await axios.get("/api/admins")
+        console.log(response)
+        setAdmins(response.data)
       } catch (error) {
-        console.error("Failed to fetch admins", error);
+        console.error("Failed to fetch admins", error)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchAdmins();
-  }, []);
+    fetchAdmins()
+  }, [])
 
   const deleteAdmin = async (id) => {
-    setDeleting(id); 
+    setDeleting(id)
     try {
-      await axios.delete(`/api/admin/${id}`);
-      setAdmins(admins.filter((admin) => admin.id !== id));
+      await axios.delete(`/api/admin/${id}`)
+      setAdmins(admins.filter((admin) => admin.id !== id))
     } catch (error) {
-      console.error("Failed to delete admin", error);
+      console.error("Failed to delete admin", error)
     } finally {
-      setDeleting(null); 
+      setDeleting(null)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen my-3 bg-gray-100">
       <div className="bg-white rounded-lg overflow-hidden">
         <main>
           {loading ? (
-            <div className="flex justify-center items-center h-48">
-              <span className="text-gray-600 text-lg">Loading...</span>
-            </div>
+            <Loader />
           ) : (
             <>
               <div className="overflow-x-auto rounded-lg shadow-md">
@@ -73,7 +72,9 @@ const AdminsPage = () => {
                             <button
                               onClick={() => deleteAdmin(admin.id)}
                               className={`text-red-500 hover:text-red-700 font-semibold ${
-                                deleting === admin.id ? "cursor-not-allowed opacity-50" : ""
+                                deleting === admin.id
+                                  ? "cursor-not-allowed opacity-50"
+                                  : ""
                               }`}
                               disabled={deleting === admin.id}
                             >
@@ -84,7 +85,10 @@ const AdminsPage = () => {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="3" className="py-4 px-4 text-center text-gray-600">
+                        <td
+                          colSpan="3"
+                          className="py-4 px-4 text-center text-gray-600"
+                        >
                           No admins found.
                         </td>
                       </tr>
@@ -97,7 +101,7 @@ const AdminsPage = () => {
         </main>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AdminsPage;
+export default AdminsPage

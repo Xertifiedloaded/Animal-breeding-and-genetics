@@ -5,17 +5,15 @@ import { prisma } from "@/lib/prisma";
 import { v4 as uuidv4 } from "uuid";
 
 export default async function handler(req, res) {
-  await databaseConnection(); // Ensure DB is connected
+  await databaseConnection(); 
 
   if (req.method === "POST") {
     const { email } = req.body;
-
     if (!email) {
       return res.status(400).json({ message: "Email is required" });
     }
-
     try {
-      // Find the user by email using Prisma
+      // Find the user by email 
       const user = await prisma.user.findUnique({
         where: { email },
       });
@@ -23,11 +21,9 @@ export default async function handler(req, res) {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-
       const resetToken = uuidv4();
       const resetTokenExpiry = new Date();
       resetTokenExpiry.setMinutes(resetTokenExpiry.getMinutes() + 10); 
-
       await prisma.user.update({
         where: { email },
         data: {

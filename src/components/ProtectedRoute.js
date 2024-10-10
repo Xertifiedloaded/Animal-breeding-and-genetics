@@ -1,38 +1,41 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
+import Loader from './loader';
 
 const ProtectedRoute = (WrappedComponent) => {
   return (props) => {
     const router = useRouter();
-    const [loading, setLoading] = useState(true); 
-    const [session, setSession] = useState(null); 
+    const [loading, setLoading] = useState(true);
+    const [session, setSession] = useState(null);
 
     useEffect(() => {
       const checkSession = async () => {
         const currentSession = await getSession();
-        setSession(currentSession); 
+        setSession(currentSession);
+        const path = router.pathname;
+        const isAuthPage = path === '/auth/login' || path === '/auth/create';
+        const isDashboardPage = path.startsWith('/dashboard');
 
-        if (!currentSession) {
-          setLoading(false);
-          router.push('/auth/login'); 
+        if (currentSession) {
+          if (isAuthPage) {
+            router.replace('/dashboard/admin');
+          } else {
+            setLoading(false);
+          }
         } else {
-          setLoading(false); 
-          if (router.pathname === '/auth/create' || router.pathname === '/auth/login') {
-            router.push('/dashboard/admin'); 
+          if (isDashboardPage) {
+            router.replace('/auth/login');
+          } else {
+            setLoading(false);
           }
         }
       };
-      
       checkSession();
     }, [router]);
 
     if (loading) {
-      return <div>Loading...</div>; 
-    }
-    if (router.pathname === '/dashboard/admin' && !session) {
-      router.push('/auth/login'); 
-      return null; 
+      return <Loader/>;
     }
 
     return <WrappedComponent {...props} />;
