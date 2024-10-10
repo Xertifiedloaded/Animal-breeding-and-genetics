@@ -8,7 +8,7 @@
 # curl -X GET "http://localhost:3000/api/cron/status" -H "Authorization: Bearer cfca5d11c7ed9a41b1a3e063c32d5114"
 
 
-POST http://localhost:3000/api/cron/status
+GET http://localhost:3000/api/cron/status
 Authorization: Bearer cfca5d11c7ed9a41b1a3e063c32d5114
 Content-Type: application/json
 
