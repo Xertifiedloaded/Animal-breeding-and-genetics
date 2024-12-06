@@ -2,88 +2,99 @@
 import { useRouter } from "next/router"
 import { signOut } from "next-auth/react"
 import { useEffect, useState } from "react"
-import { FaChevronDown, FaChevronUp } from "react-icons/fa" // Importing chevron icons
+import { 
+  FaUser, 
+  FaSignOutAlt, 
+  FaDashboard, 
+  FaHome, 
+  FaNetworkWired 
+} from "react-icons/fa"
 
 const Header = ({ session }) => {
   const router = useRouter()
-  const [ip, setIp] = useState("")
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
-  useEffect(() => {
-    const fetchIp = async () => {
-      const response = await fetch("/api/ip-address")
-      const data = await response.json()
-      setIp(data.ip)
+  const menuItems = [
+    {
+      icon: <FaHome className="mr-2" />,
+      label: "Home",
+      action: () => router.push("/")
+    },
+    {
+      icon: <FaDashboard className="mr-2" />,
+      label: "Dashboard",
+      action: () => router.push("/dashboard/admin")
+    },
+    {
+      icon: <FaNetworkWired className="mr-2" />,
+      label: "Alumni Network",
+      action: () => router.push("/alumni")
     }
-
-    fetchIp()
-  }, [])
-
-  const handleNavigation = (path) => {
-    router.push(path)
-  }
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev)
-  }
-
-  const closeDropdown = () => {
-    setIsDropdownOpen(false)
-  }
+  ]
 
   return (
-    <div className="flex text-sm lg:text-sm justify-between items-center bg-gray-800 text-white p-4 sticky top-0 z-20">
-      {session ? (
-        <>
-          <div className="flex space-x-4">
-            <button
-              onClick={() =>
-                handleNavigation(
-                  router.pathname === "/" ? "/dashboard/admin" : "/"
-                )
-              }
-              className={`px-1 py-2 rounded hover:bg-gray-600`}
-            >
-              {router.pathname === "/" ? "View Dashboard" : "View as Visitor"}
-            </button>
-          </div>
+    <header className="sticky top-0 z-50 bg-gradient-to-r bg-black text-white shadow-lg">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div className="flex items-center space-x-4">
+          <h1 className="text-xl font-bold flex items-center">
+            <FaNetworkWired className="mr-2" />
+            Alumni Portal
+          </h1>
+        </div>
 
-          <div className="relative">
-            <button
-              className="p-2 bg-black rounded-lg flex items-center space-x-2"
-              onClick={toggleDropdown}
-            >
-              <span>{session.user.name}!</span>
-              {isDropdownOpen ? (
-                <FaChevronUp className="text-white" />
-              ) : (
-                <FaChevronDown className="text-white" />
-              )}
-            </button>
+        {session ? (
+          <div className="flex items-center space-x-4">
+            <nav className="hidden md:flex space-x-4">
+              {menuItems.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={item.action}
+                  className="flex items-center hover:bg-blue-700 px-3 py-2 rounded-md transition-colors"
+                >
+                  {item.icon}
+                  {item.label}
+                </button>
+              ))}
+            </nav>
 
-            {isDropdownOpen && (
-              <div className="absolute right-0 bg-white text-gray-800 rounded-lg shadow-lg mt-2 z-50">
-                <div className="py-2 px-4">
-                  <small
-                    onClick={() => {
-                      closeDropdown()
-                      signOut({ callbackUrl: "/auth/login" })
-                    }}
-                    className="cursor-pointer hover:bg-gray-100 rounded-lg block text-left p-2"
+            <div className="relative">
+              <button 
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="flex items-center bg-blue-900 hover:bg-blue-800 px-4 py-2 rounded-full transition-colors"
+              >
+                <FaUser className="mr-2" />
+                <span>{session.user.name}</span>
+              </button>
+
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-xl overflow-hidden">
+                  {menuItems.map((item, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        item.action()
+                        setIsDropdownOpen(false)
+                      }}
+                      className="flex items-center w-full px-4 py-2 hover:bg-gray-100 transition-colors"
+                    >
+                      {item.icon}
+                      {item.label}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => signOut({ callbackUrl: "/auth/login" })}
+                    className="flex items-center w-full px-4 py-2 hover:bg-red-50 text-red-600 border-t"
                   >
+                    <FaSignOutAlt className="mr-2" />
                     Sign Out
-                  </small>
+                  </button>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </>
-      ) : (
-        <button className="p-2 bg-black rounded-lg flex items-center space-x-2">
-          <span>Welcome, Alumni! {ip}</span>
-        </button>
-      )}
-    </div>
+        ) : null}
+      </div>
+    </header>
   )
 }
 

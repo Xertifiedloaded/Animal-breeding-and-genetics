@@ -4,6 +4,7 @@ import { useSession, signOut } from "next-auth/react"
 import Head from "next/head"
 import React from "react"
 import Header from "../components/Header"
+import JoinAction from '../components/Join';
 
 export default function Home() {
   const { data: session } = useSession()
@@ -25,6 +26,7 @@ export default function Home() {
         </div>
         <Landing />
         <FormInfo />
+        <JoinAction/>
         <footer className="text-center mt-4">
           <small className="block text-[12px] mb-1">
             Made with <span className="animate-pulse">❤️</span> by Makinde
