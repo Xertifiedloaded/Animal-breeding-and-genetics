@@ -58,10 +58,10 @@ export default function Research() {
             Pioneering Genetic Research for Sustainable Animal Development
           </p>
           <div className="flex justify-center space-x-4">
-            <button className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg">
+            <button className="bg-blue-600 hover:bg-blue-700 text-sm px-6 py-3 rounded-lg">
               Explore Research
             </button>
-            <button className="border border-white hover:bg-white hover:text-blue-900 px-6 py-3 rounded-lg">
+            <button className="border text-sm border-white hover:bg-white hover:text-blue-900 px-6 py-3 rounded-lg">
               Alumni Network
             </button>
           </div>
