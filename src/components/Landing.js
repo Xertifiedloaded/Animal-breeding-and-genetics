@@ -50,14 +50,14 @@ export default function Research() {
         />
         <div className="absolute inset-0  opacity-70 z-10"></div>
 
-        <div className="relative z-20 container mx-auto px-4 flex flex-col justify-center h-full text-white">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+        <div className="relative text-center z-20 container mx-auto px-4 flex flex-col justify-center h-full text-white">
+          <h1 className="text-4xl text-center md:text-6xl font-bold mb-4">
             Animal Breeding & Genetics
           </h1>
-          <p className="text-xl max-w-2xl mb-8">
+          <p className="lg:text-xl text-base   mb-8">
             Pioneering Genetic Research for Sustainable Animal Development
           </p>
-          <div className="flex space-x-4">
+          <div className="flex justify-center space-x-4">
             <button className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg">
               Explore Research
             </button>
